@@ -37,7 +37,7 @@ const Login = ({ navigation }) => {
         email: email,
         password: password,
       };
-
+      alert('Login Successful');
       const response = await axios.post(
         "https://bloggler-backend.vercel.app/api/user/login",
         body
@@ -49,6 +49,7 @@ const Login = ({ navigation }) => {
 
       navigation.navigate('Home');
     } catch (error) {
+      alert('Incorrect Credentials');
       console.log("Error during Login:", error);
 
       const errorMessage = error?.response?.data?.message || 'An error occurred';

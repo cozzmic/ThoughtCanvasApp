@@ -48,13 +48,14 @@ const SignUp = ({navigation}) => {
         "https://bloggler-backend.vercel.app/api/user/signup",
         body
       );
-
+      alert('Sign-Up Successful');
       console.log("Sign-Up successful:", response.data);
 
       await AsyncStorage.setItem("userData", JSON.stringify(response.data, username));
 
       navigation.navigate('Home');
     } catch (error) {
+      alert('Error: Try Again');
       console.log("Error during Sign-Up:", error);
 
       const errorMessage = error?.response?.data?.message || 'An error occurred';
