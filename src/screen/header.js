@@ -5,13 +5,21 @@ const Header = ({title, bgColor, textColor, align, justify, size}) => {
   const headerStyle = {
     backgroundColor: bgColor,
     padding: 10,
-    width : '100%', 
+    width: '100%',
     flexDirection: 'row',
     height: '10%',
     alignItems: align,
-    justifyContent : justify,
-    position: 'absolute',
-    top: 0
+    justifyContent: justify,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowRadius: 10,
+    elevation: 25,
+    zIndex: 2,
+    position: 'absolute', 
+    top: 0// Add this line to set the position to relative
   };
 
   return (
@@ -21,7 +29,7 @@ const Header = ({title, bgColor, textColor, align, justify, size}) => {
         fontSize: size, 
         fontWeight: 'bold', 
         textDecorationLine: 'underline',
-        top: 10,
+        top: 15,
         color: textColor
         }}>
         {title}
