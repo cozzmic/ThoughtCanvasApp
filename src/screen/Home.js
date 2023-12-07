@@ -8,12 +8,20 @@ import {
   Modal,
   TextInput,
 } from "react-native";
+import axios from "axios";
 import Header from "./header";
 import Footer from "./footer";
+import Buttons from "./Buttons";
 import { LinearGradient } from "expo-linear-gradient";
-import { AntDesign } from "@expo/vector-icons";
+import {
+  AntDesign,
+  SimpleLineIcons,
+  FontAwesome,
+  MaterialIcons,
+} from "@expo/vector-icons";
 
 const Home = ({ navigation }) => {
+  
   const [posts, setPosts] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   useEffect(() => {
@@ -87,6 +95,7 @@ const Home = ({ navigation }) => {
       // ... error handling
     }
   };
+  
 
   return (
     <LinearGradient colors={["#fedae1", "#FD2E2A"]} style={styles.container}>
@@ -101,26 +110,30 @@ const Home = ({ navigation }) => {
       <ScrollView contentContainerStyle={styles.scrollContentContainer}>
         {posts.map((post) => (
           <View key={post._id} style={styles.card}>
-            <View style={styles.content}>
-              <Text style={[styles.title, { fontSize: 18, color: "#2c3e50" }]}>
-                {post.title}
-              </Text>
-              <Text style={{ fontSize: 16, color: "#34495e" }}>
-                {post.content}
-              </Text>
-              <Text style={{ fontSize: 14, color: "#7f8c8d" }}>
-                Created by: {post.createdBy.userName}
-              </Text>
+            <View style={styles.userDetails}>
+              <View style={styles.userIcon}>
+                <SimpleLineIcons name="user" size={100} color="#FD2E2A" />
+              </View>
+              <View style={styles.userInfo}>
+                <Text style={styles.createdByText}>
+                  @{post.createdBy.userName}
+                </Text>
+                <Text style={styles.posttitle}>{post.title}</Text>
+                <Text style={styles.contentText}>{post.content}</Text>
+              </View>
             </View>
+            <View style={styles.horizontalLine} />
+            <Buttons />
           </View>
         ))}
       </ScrollView>
+
       <Modal animationType="slide" transparent={true} visible={modalVisible}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <View style={{  width: 300}}>
+            <View style={{ width: 300 }}>
               <Pressable onPress={() => setModalVisible(!modalVisible)}>
-                <AntDesign name="closecircleo" size={30} color="#fff" />
+                <AntDesign name="closecircleo" size={25} color="#fff" />
               </Pressable>
               <Text style={styles.modalText}>ℂ𝕣𝕖𝕒𝕥𝕖 ℙ𝕠𝕤𝕥</Text>
             </View>
@@ -173,41 +186,69 @@ const styles = StyleSheet.create({
     top: 80,
   },
   card: {
-    width: "80%",
+    width: "90%",
     backgroundColor: "#fff",
-    borderRadius: 10,
-    padding: 15,
-    marginBottom: 15,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    marginBottom: 10,
+    flexDirection: "column",
     shadowColor: "#000",
+    position: "relative",
     shadowOffset: {
       width: 0,
       height: 3,
     },
     shadowOpacity: 0.8,
-    shadowRadius: 5,
+    shadowRadius: 10,
     elevation: 5,
+    borderRadius: 15,
+    padding: 20,
+    alignSelf: "center",
   },
-  content: {
-    flex: 1,
-  },
-  title: {
-    fontWeight: "bold",
-    marginBottom: 5,
-  },
-  buttonColumn: {
-    flexDirection: "column",
+  userDetails: {
+    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-around",
+    justifyContent: "center",
   },
-  // Customize your button styles as needed
-  button: {
-    borderWidth: 1,
-    borderRadius: 5,
-    padding: 5,
+  userIcon: {
+    margin: 10,
+    marginTop: 5,
+    borderRadius: 10,
+    backgroundColor: "#fedae1",
+  },
+  userInfo: {
+    flex: 1,
+    marginLeft: 10, // Add some margin between the user icon and text
+  },
+  posttitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginLeft: 10,
+    textDecorationLine: "underline",
+  },
+  contentText: {
+    textAlign: "center",
+    // marginBottom: 10,
+  },
+  createdByText: {
+    color: "#FD2E2A",
+    fontSize: 15,
+    fontStyle: 'italic',
+    fontWeight: "bold",
+    textDecorationLine: "underline",
+    textAlign: "center",
+    marginBottom: 10, // Add space between user icon and text
+  },
+  horizontalLine: {
+    borderBottomColor: '#bdc3c7',
+    borderBottomWidth: 1,
+    width: '100%', // Adjust the width as needed
     marginVertical: 5,
+    // margin // Adjust the vertical spacing as needed
+  },
+  buttons: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 10, // Add space between content and buttons
   },
   addButton: {
     position: "absolute",
@@ -233,6 +274,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalView: {
     margin: 20,
@@ -277,7 +319,6 @@ const styles = StyleSheet.create({
   },
   title: {
     height: 50,
-    border: "none",
     marginBottom: 20,
     padding: 10,
     borderRadius: 8,
@@ -285,8 +326,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   content: {
-    height: 50,
-    border: "none",
     marginBottom: 20,
     padding: 10,
     borderRadius: 8,

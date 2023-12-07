@@ -19,7 +19,7 @@ const Header = ({title, bgColor, textColor, align, justify, size}) => {
     elevation: 25,
     zIndex: 2,
     position: 'absolute', 
-    top: 0// Add this line to set the position to relative
+    top: 0
   };
 
   return (
