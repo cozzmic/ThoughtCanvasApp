@@ -8,7 +8,7 @@ const Header = ({title, bgColor, textColor, align, justify, size}) => {
     width: '100%',
     flexDirection: 'row',
     height: '10%',
-    alignItems: align,
+    textAlign: align,
     justifyContent: justify,
     shadowColor: "#000",
     shadowOffset: {
@@ -29,7 +29,7 @@ const Header = ({title, bgColor, textColor, align, justify, size}) => {
         fontSize: size, 
         fontWeight: 'bold', 
         textDecorationLine: 'underline',
-        top: 15,
+        top: 25,
         color: textColor
         }}>
         {title}
