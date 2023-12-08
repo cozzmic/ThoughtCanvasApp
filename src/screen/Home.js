@@ -9,16 +9,13 @@ import {
   TextInput,
 } from "react-native";
 import axios from "axios";
-import Header from "./header";
-import Footer from "./footer";
-import Buttons from "./Buttons";
+import Header from "./components/header";
+import Footer from "./components/footer";
+import LikeButton from "./components/likeButton";
+import CommentButton from "./components/commentButton";
+import UserIcon from "./components/userIcon";
 import { LinearGradient } from "expo-linear-gradient";
-import {
-  AntDesign,
-  SimpleLineIcons,
-  FontAwesome,
-  MaterialIcons,
-} from "@expo/vector-icons";
+import {AntDesign} from "@expo/vector-icons";
 
 const Home = ({ navigation }) => {
   
@@ -104,26 +101,28 @@ const Home = ({ navigation }) => {
         bgColor="#fedae1"
         textColor="#FD2E2A"
         align="center"
-        justify="center"
+        justify="flex-start"
         size={30}
       />
       <ScrollView contentContainerStyle={styles.scrollContentContainer}>
         {posts.map((post) => (
           <View key={post._id} style={styles.card}>
             <View style={styles.userDetails}>
-              <View style={styles.userIcon}>
-                <SimpleLineIcons name="user" size={100} color="#FD2E2A" />
-              </View>
+              <UserIcon/>
               <View style={styles.userInfo}>
                 <Text style={styles.createdByText}>
                   @{post.createdBy.userName}
                 </Text>
                 <Text style={styles.posttitle}>{post.title}</Text>
                 <Text style={styles.contentText}>{post.content}</Text>
+                <Text style ={{color: 'black',textAlign:'right',top: 8}}>{post.createdAt}</Text>
               </View>
             </View>
             <View style={styles.horizontalLine} />
-            <Buttons />
+            <View style={styles.buttons}>
+              <LikeButton />
+              <CommentButton />
+            </View>
           </View>
         ))}
       </ScrollView>
@@ -207,12 +206,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-  },
-  userIcon: {
-    margin: 10,
-    marginTop: 5,
-    borderRadius: 10,
-    backgroundColor: "#fedae1",
   },
   userInfo: {
     flex: 1,

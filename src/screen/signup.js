@@ -9,8 +9,7 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Header from "./header";
-import Login from "./login";
+import Header from "./components/header";
 
 const SignUp = ({navigation}) => {
   const [username, setUsername] = useState("");

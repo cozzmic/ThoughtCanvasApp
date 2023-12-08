@@ -9,7 +9,7 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Header from "./header";
+import Header from "./components/header";
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -49,7 +49,7 @@ const Login = ({ navigation }) => {
 
       navigation.navigate('Home');
     } catch (error) {
-      alert('Incorrect Credentials');
+      // alert('Incorrect Credentials');
       console.log("Error during Login:", error);
 
       const errorMessage = error?.response?.data?.message || 'An error occurred';
