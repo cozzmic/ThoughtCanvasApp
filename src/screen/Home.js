@@ -1,26 +1,17 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  Pressable,
-  Modal,
-  TextInput,
-} from "react-native";
-import axios from "axios";
+import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native";
+
 import Header from "./components/header";
 import Footer from "./components/footer";
 import LikeButton from "./components/likeButton";
 import CommentButton from "./components/commentButton";
+import CreatePost from "./components/createPost";
 import UserIcon from "./components/userIcon";
 import { LinearGradient } from "expo-linear-gradient";
-import {AntDesign} from "@expo/vector-icons";
+import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 
 const Home = ({ navigation }) => {
-  
   const [posts, setPosts] = useState([]);
-  const [modalVisible, setModalVisible] = useState(false);
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -37,62 +28,7 @@ const Home = ({ navigation }) => {
     fetchPosts();
   }, []);
 
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-
-  const CreatePost = async () => {
-    try {
-      const body = {
-        title: title,
-        content: content,
-      };
-
-      const response = await axios.post(
-        "https://bloggler-backend.vercel.app/api/post",
-        body,
-        {
-          headers: {
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTYxYjk1M2VlNThjNzIxMjlmMGExMTMiLCJ1c2VyTmFtZSI6ImciLCJlbWFpbCI6ImdhdXJhdjEyQC5jb20iLCJpYXQiOjE3MDE4MDA3OTMsImV4cCI6MTcwNDM5Mjc5M30.fnrjQNaEZY6zZz-VUuqSYtvAddTPqIzjc6B3YN1UzGo`,
-          },
-        }
-      );
-
-      console.log("Post created successfully:", response.data);
-
-      const username = response.data.username;
-
-      await AsyncStorage.setItem(
-        "userData",
-        JSON.stringify(response.data, username)
-      );
-      alert("Post created successfully!");
-      setTitle("");
-      setContent("");
-
-      navigation.navigate("CreatePost");
-    } catch (error) {
-      console.log("Error during post:", error);
-
-      const errorMessage = error?.response?.data?.message || "Unknown error";
-      console.log("Error message:", errorMessage);
-
-      alert("Error during post: ${errorMessage}. Please try again.");
-    }
-  };
-  const onPress = async () => {
-    if (!title || !content) {
-      alert("Please fill in both title and content fields.");
-      return;
-    }
-
-    try {
-      const post = await CreatePost();
-      // ... rest of the code
-    } catch (error) {
-      // ... error handling
-    }
-  };
-  
+  const [isCreatePostModalVisible, setCreatePostModalVisible] = useState(false);
 
   return (
     <LinearGradient colors={["#fedae1", "#FD2E2A"]} style={styles.container}>
@@ -108,59 +44,32 @@ const Home = ({ navigation }) => {
         {posts.map((post) => (
           <View key={post._id} style={styles.card}>
             <View style={styles.userDetails}>
-              <UserIcon/>
+              <UserIcon icon={post.createdBy.imageUrl} />
               <View style={styles.userInfo}>
                 <Text style={styles.createdByText}>
                   @{post.createdBy.userName}
                 </Text>
                 <Text style={styles.posttitle}>{post.title}</Text>
                 <Text style={styles.contentText}>{post.content}</Text>
-                <Text style ={{color: 'black',textAlign:'right',top: 8}}>{post.createdAt}</Text>
+                <Text style={{ color: "black", textAlign: "right", top: 8 }}>
+                  {post.createdAt}
+                </Text>
               </View>
             </View>
             <View style={styles.horizontalLine} />
             <View style={styles.buttons}>
               <LikeButton />
               <CommentButton />
+              <MaterialIcons name="delete" size={35} color="#FD2E2A" />
             </View>
           </View>
         ))}
-      </ScrollView>
-
-      <Modal animationType="slide" transparent={true} visible={modalVisible}>
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <View style={{ width: 300 }}>
-              <Pressable onPress={() => setModalVisible(!modalVisible)}>
-                <AntDesign name="closecircleo" size={25} color="#fff" />
-              </Pressable>
-              <Text style={styles.modalText}>ℂ𝕣𝕖𝕒𝕥𝕖 ℙ𝕠𝕤𝕥</Text>
-            </View>
-            <TextInput
-              style={styles.title}
-              placeholder="Title"
-              value={title}
-              onChangeText={(text) => setTitle(text)}
-            />
-            <TextInput
-              style={styles.content}
-              placeholder="Your Thoughts"
-              value={content}
-              onChangeText={(text) => setContent(text)}
-              multiline
-            />
-            <Pressable
-              style={styles.shareBtn}
-              onPress={() => setModalVisible(!modalVisible)}
-            >
-              <Text style={styles.textStyle}>Share</Text>
-            </Pressable>
-          </View>
-        </View>
-      </Modal>
 
       <Footer />
-      <Pressable style={styles.addButton} onPress={() => setModalVisible(true)}>
+      <Pressable
+        style={styles.addButton}
+        onPress={() => setCreatePostModalVisible(true)}
+      >
         <AntDesign
           name="plus"
           size={30}
@@ -168,6 +77,13 @@ const Home = ({ navigation }) => {
           style={styles.plusIcon}
         />
       </Pressable>
+      {/* <CreatePost
+          modalVisible={isCreatePostModalVisible}
+          setModalVisible={setCreatePostModalVisible}
+          // onSubmit={handleCreatePost}
+          navigation={navigation}
+        /> */}
+      </ScrollView>
     </LinearGradient>
   );
 };
@@ -225,22 +141,22 @@ const styles = StyleSheet.create({
   createdByText: {
     color: "#FD2E2A",
     fontSize: 15,
-    fontStyle: 'italic',
+    fontStyle: "italic",
     fontWeight: "bold",
     textDecorationLine: "underline",
     textAlign: "center",
     marginBottom: 10, // Add space between user icon and text
   },
   horizontalLine: {
-    borderBottomColor: '#bdc3c7',
+    borderBottomColor: "#bdc3c7",
     borderBottomWidth: 1,
-    width: '100%', // Adjust the width as needed
+    width: "100%", // Adjust the width as needed
     marginVertical: 5,
     // margin // Adjust the vertical spacing as needed
   },
   buttons: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+    flexDirection: "row",
+    justifyContent: "space-around",
     marginTop: 10, // Add space between content and buttons
   },
   addButton: {
@@ -267,7 +183,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalView: {
     margin: 20,
