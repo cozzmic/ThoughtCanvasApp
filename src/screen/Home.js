@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native";
-
+import { useNavigation } from "@react-navigation/native";
 import Header from "./components/header";
 import Footer from "./components/footer";
 import LikeButton from "./components/likeButton";
 import CommentButton from "./components/commentButton";
-import CreatePost from "./components/createPost";
+import CreatePost from "./components/createPost"; 
 import UserIcon from "./components/userIcon";
 import { LinearGradient } from "expo-linear-gradient";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 
-const Home = ({ navigation }) => {
+const Home = () => {
+  const navigation = useNavigation();
   const [posts, setPosts] = useState([]);
   useEffect(() => {
     const fetchPosts = async () => {
@@ -30,6 +31,40 @@ const Home = ({ navigation }) => {
 
   const [isCreatePostModalVisible, setCreatePostModalVisible] = useState(false);
 
+  const handleCreatePost = () => {
+    setCreatePostModalVisible(true);
+  };
+  const handleDeletePost = async (postId) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTc0YjdhNDFkNDRlMjg5MzRlZGNiMWMiLCJ1c2VyTmFtZSI6IkdhdXJhdiIsImVtYWlsIjoiR2F1cmF2LmNvbSIsImlhdCI6MTcwMjE0ODA4NiwiZXhwIjoxNzA0NzQwMDg2fQ.LZr7Rik133Ault3B9X3mhGHcIWo5_uxuIowC-Zhf2Yo'}`, 
+      };
+
+      const response = await fetch(
+        `https://bloggler-backend.vercel.app/api/post/delete/${postId}`,
+        {
+          method: 'DELETE',
+          headers: headers,
+        }
+      );
+
+      if (response.ok) {
+        alert('Post deleted successfully');
+
+        const updatedResponse = await fetch(
+          'https://bloggler-backend.vercel.app/api/post'
+        );
+        const updatedData = await updatedResponse.json();
+        setPosts(updatedData.data);
+      } else {
+        alert('Failed to delete post');
+      }
+    } catch (error) {
+      console.error('Error deleting post:', error);
+      alert('An error occurred while deleting the post');
+    }
+  };
+
   return (
     <LinearGradient colors={["#fedae1", "#FD2E2A"]} style={styles.container}>
       <Header
@@ -39,6 +74,7 @@ const Home = ({ navigation }) => {
         align="center"
         justify="flex-start"
         size={30}
+      
       />
       <ScrollView contentContainerStyle={styles.scrollContentContainer}>
         {posts.map((post) => (
@@ -50,7 +86,10 @@ const Home = ({ navigation }) => {
                   @{post.createdBy.userName}
                 </Text>
                 <Text style={styles.posttitle}>{post.title}</Text>
-                <Text style={styles.contentText}>{post.content}</Text>
+                <Text style={styles.contentText} 
+                      numberOfLines={3}
+                      ellipsizeMode="tail"
+                >{post.content}</Text>
                 <Text style={{ color: "black", textAlign: "right", top: 8 }}>
                   {post.createdAt}
                 </Text>
@@ -60,29 +99,28 @@ const Home = ({ navigation }) => {
             <View style={styles.buttons}>
               <LikeButton />
               <CommentButton />
-              <MaterialIcons name="delete" size={35} color="#FD2E2A" />
+              <MaterialIcons name="delete" size={35} color="#FD2E2A"  onPress={() => handleDeletePost(post._id)}/>
             </View>
           </View>
         ))}
 
-      <Footer />
-      <Pressable
-        style={styles.addButton}
-        onPress={() => setCreatePostModalVisible(true)}
-      >
-        <AntDesign
-          name="plus"
-          size={30}
-          color="#FD2E2A"
-          style={styles.plusIcon}
-        />
-      </Pressable>
-      {/* <CreatePost
+        <Footer />
+        <Pressable
+          style={styles.addButton}
+          onPress={handleCreatePost}
+        >
+          <AntDesign
+            name="plus"
+            size={30}
+            color="#FD2E2A"
+            style={styles.plusIcon}
+          />
+        </Pressable>
+        <CreatePost
           modalVisible={isCreatePostModalVisible}
-          setModalVisible={setCreatePostModalVisible}
-          // onSubmit={handleCreatePost}
+          setModalVisible={setCreatePostModalVisible} 
           navigation={navigation}
-        /> */}
+        />
       </ScrollView>
     </LinearGradient>
   );
@@ -141,22 +179,22 @@ const styles = StyleSheet.create({
   createdByText: {
     color: "#FD2E2A",
     fontSize: 15,
-    fontStyle: "italic",
+    fontStyle: 'italic',
     fontWeight: "bold",
     textDecorationLine: "underline",
     textAlign: "center",
     marginBottom: 10, // Add space between user icon and text
   },
   horizontalLine: {
-    borderBottomColor: "#bdc3c7",
+    borderBottomColor: '#bdc3c7',
     borderBottomWidth: 1,
-    width: "100%", // Adjust the width as needed
+    width: '100%', // Adjust the width as needed
     marginVertical: 5,
     // margin // Adjust the vertical spacing as needed
   },
   buttons: {
-    flexDirection: "row",
-    justifyContent: "space-around",
+    flexDirection: 'row',
+    justifyContent: 'space-around',
     marginTop: 10, // Add space between content and buttons
   },
   addButton: {
@@ -183,7 +221,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalView: {
     margin: 20,
@@ -245,5 +283,8 @@ const styles = StyleSheet.create({
     textAlign: "left",
   },
 });
+
+
+
 
 export default Home;

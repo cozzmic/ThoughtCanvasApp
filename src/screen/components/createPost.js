@@ -1,77 +1,96 @@
 import React, { useState } from 'react';
 import { View, Modal, TextInput, Text, Pressable } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-
-const CreatePost = ({ modalVisible, setModalVisible, onSubmit,navigation }) => {
+import axios from 'axios';
+const CreatePost = ({ modalVisible, setModalVisible, navigation }) => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-
-  const handlePress = () => {
-    onSubmit({ title, content });
-    setTitle('');
-    setContent('');
-    setModalVisible(!modalVisible);
+  const handleTextInput = () => {
+    if (!title.trim()) {
+      alert('Unfilled Details');
+      return false;
+    }
+    if (!content.trim()) {
+      alert('Unfilled Details');
+      return false;
+    }
+    return true;
   };
 
+  const handlePress = async () => {
+    try {
+      if (!handleTextInput()) {
+        return;
+      }
+  
+      const body = {
+        title: title,
+        content: content,
+  
+      };
+  
+      
+      const headers = {
+        Authorization: `Bearer ${`eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NTc0YjdhNDFkNDRlMjg5MzRlZGNiMWMiLCJ1c2VyTmFtZSI6IkdhdXJhdiIsImVtYWlsIjoiR2F1cmF2LmNvbSIsImlhdCI6MTcwMjE0ODA4NiwiZXhwIjoxNzA0NzQwMDg2fQ.LZr7Rik133Ault3B9X3mhGHcIWo5_uxuIowC-Zhf2Yo`}`,
+      };
+  
+      alert('Post Created Successfully');
+      navigation.navigate('Home');
+  
+      const response = await axios.post(
+        "https://bloggler-backend.vercel.app/api/post",
+        body,
+        { headers: headers }
+      );
+  
+      console.log("Post Created Successfully:", response.data);
+      setTitle('');
+    setContent('');
+
+    navigation.navigate('Home');
+  
+     
+    } catch (error) {
+      console.log("Error during create post:", error);
+  
+      const errorMessage = error?.response?.data?.message || 'An error occurred';
+  
+      console.log("Error message:", errorMessage);
+    }
+  };
   return (
-    <View >
+    <View>
+      <Modal animationType="slide" transparent={true} visible={modalVisible}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
             <Pressable onPress={() => setModalVisible(!modalVisible)}>
               <AntDesign name="closecircleo" size={25} color="#fff" />
             </Pressable>
-    <Modal animationType="slide" transparent={true} visible={modalVisible}>
-      <View style={styles.centeredView}>
-        <View style={styles.modalView}>
-          
             <Text style={styles.modalText}>Create Post</Text>
+            <TextInput
+              style={styles.title}
+              placeholder="Title"
+              value={title}
+              onChangeText={(text) => setTitle(text)}
+            />
+            <TextInput
+              style={styles.content}
+              placeholder="Your Thoughts"
+              value={content}
+              onChangeText={(text) => setContent(text)}
+              multiline
+            />
+            <Pressable style={styles.shareBtn} onPress={handlePress}>
+              <Text style={styles.textStyle}>Share</Text>
+            </Pressable>
           </View>
-          <TextInput
-            style={styles.title}
-            placeholder="Title"
-            value={title}
-            onChangeText={(text) => setTitle(text)}
-          />
-          <TextInput
-            style={styles.content}
-            placeholder="Your Thoughts"
-            value={content}
-            onChangeText={(text) => setContent(text)}
-            multiline
-          />
-          <Pressable style={styles.shareBtn} onPress={handlePress}>
-            <Text style={styles.textStyle}>Share</Text>
-          </Pressable>
         </View>
-      
-    </Modal>
+      </Modal>
     </View>
   );
 };
 
 const styles = {
-    buttons: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        marginTop: 10, 
-      },
-      addButton: {
-        position: "absolute",
-        bottom: 80,
-        right: 20,
-        backgroundColor: "#fedae1",
-        borderRadius: 50,
-        padding: 15,
-        shadowColor: "#000",
-        shadowOffset: {
-          width: 0,
-          height: 3,
-        },
-        shadowRadius: 10,
-        elevation: 25,
-        zIndex: 2,
-      },
-      plusIcon: {
-        fontWeight: 900,
-      },
   centeredView: {
     flex: 1,
     justifyContent: 'center',
@@ -102,7 +121,8 @@ const styles = {
     alignItems: 'center',
     padding: 8,
     width: 120,
-    border: 'none',
+    border: "none",
+    marginTop: 20,
   },
   textStyle: {
     color: '#FD2E2A',
