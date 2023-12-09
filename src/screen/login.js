@@ -49,12 +49,12 @@ const Login = ({ navigation }) => {
 
       navigation.navigate('Home');
     } catch (error) {
-      // alert('Incorrect Credentials');
+      alert('Incorrect Credentials');
       console.log("Error during Login:", error);
 
-      const errorMessage = error?.response?.data?.message || 'An error occurred';
-
-      console.log("Error message:", errorMessage);
+      const errorMessage = error?.response?.data?.message || "An error occurred";
+      alert(`Login failed: ${errorMessage}`);
+      
     }
   };
 
@@ -62,11 +62,9 @@ const Login = ({ navigation }) => {
     <LinearGradient colors={["#FD2E2A", "#fedae1"]} style={styles.container}>
       <Header 
         title='𝕋𝕙𝕠𝕦𝕘𝕙𝕥ℂ𝕒𝕟𝕧𝕒𝕤'
-        bgColor='#fedae1'
-        textColor='#FD2E2A'
         align='center'
         justify='center'
-        size={30}
+        showUserIcon={false}
       />
       <View style={styles.whiteBox}>
         <Text style={styles.heading}>𝕃𝕠𝕘𝕚𝕟</Text>

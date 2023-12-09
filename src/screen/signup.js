@@ -68,11 +68,9 @@ const SignUp = ({navigation}) => {
     <LinearGradient colors={["#FD2E2A", "#fedae1"]} style={styles.container}>
       <Header 
         title = '𝕋𝕙𝕠𝕦𝕘𝕙𝕥ℂ𝕒𝕟𝕧𝕒𝕤'
-        bgColor= '#fedae1'
-        textColor= '#FD2E2A'
         align= 'center'
         justify= 'center'
-        size = {30}
+        showUserIcon={false}
       />
       <View style={styles.whiteBox}>
         <Text style={styles.heading}>𝕊𝕚𝕘𝕟 𝕌𝕡</Text>
