@@ -23,7 +23,7 @@ const CommentButton = () => {
   return (
     <View>
       <Pressable onPress={handleCommentPress}>
-        <FontAwesome name="comment-o" size={35} color="#FD2E2A" />
+        <FontAwesome name="comment-o" size={30} color="#FD2E2A" />
       </Pressable>
       <Modal
         animationType="slide"

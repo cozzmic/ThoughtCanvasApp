@@ -60,10 +60,15 @@ const Login = ({ navigation }) => {
 
   return (
     <LinearGradient colors={["#FD2E2A", "#fedae1"]} style={styles.container}>
-      <Header 
-        title='𝕋𝕙𝕠𝕦𝕘𝕙𝕥ℂ𝕒𝕟𝕧𝕒𝕤'
-        align='center'
-        justify='center'
+       <Header
+        title="𝕋𝕙𝕠𝕦𝕘𝕙𝕥ℂ𝕒𝕟𝕧𝕒𝕤"
+        bgColor="#fedae1"
+        textColor="#FD2E2A"
+        align="center"
+        justify="space-between"
+        size={30}
+       
+    
         showUserIcon={false}
       />
       <View style={styles.whiteBox}>

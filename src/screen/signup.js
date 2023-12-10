@@ -11,16 +11,16 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Header from "./components/header";
 
-const SignUp = ({navigation}) => {
+const Signup = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleTextInput = () => {
     if (!username.trim()) {
-        alert('Unfilled Details');
-        return false;
-      }
+      alert('Unfilled Details');
+      return false;
+    }
     if (!email.trim()) {
       alert('Unfilled Details');
       return false;
@@ -32,54 +32,59 @@ const SignUp = ({navigation}) => {
     return true;
   };
 
-  const handleSignUp = async () => {
+  const handleSignup = async () => {
     try {
-        if(!handleTextInput()) {
-           return;
-        }
+      if (!handleTextInput()) {
+        return; 
+      }
+
       const body = {
-        username: username,
+        userName:username,
         email: email,
         password: password,
       };
-
+      alert('Signup Successful');
       const response = await axios.post(
         "https://bloggler-backend.vercel.app/api/user/signup",
         body
       );
-      alert('Sign-Up Successful');
-      console.log("Sign-Up successful:", response.data);
 
-      await AsyncStorage.setItem("userData", JSON.stringify(response.data, username));
+      console.log("Signup successful:", response.data);
+
+      await AsyncStorage.setItem("userData", JSON.stringify(response.data, email));
 
       navigation.navigate('Home');
     } catch (error) {
-      alert('Error: Try Again');
-      console.log("Error during Sign-Up:", error);
+      alert('Incorrect Credentials');
+      console.log("Error during Signup:", error);
 
-      const errorMessage = error?.response?.data?.message || 'An error occurred';
-
-      console.log("Error message:", errorMessage);
-
+      const errorMessage = error?.response?.data?.message || "An error occurred";
+      alert(`Signup failed: ${errorMessage}`);
+      
     }
   };
 
   return (
     <LinearGradient colors={["#FD2E2A", "#fedae1"]} style={styles.container}>
-      <Header 
-        title = '𝕋𝕙𝕠𝕦𝕘𝕙𝕥ℂ𝕒𝕟𝕧𝕒𝕤'
-        align= 'center'
-        justify= 'center'
+       <Header
+        title="𝕋𝕙𝕠𝕦𝕘𝕙𝕥ℂ𝕒𝕟𝕧𝕒𝕤"
+        bgColor="#fedae1"
+        textColor="#FD2E2A"
+        align="center"
+        justify="space-between"
+        size={30}
+       
+    
         showUserIcon={false}
       />
       <View style={styles.whiteBox}>
         <Text style={styles.heading}>𝕊𝕚𝕘𝕟 𝕌𝕡</Text>
         <TextInput
-            style={styles.input}
-            placeholder="Username"
-            value={username}
-            onChangeText={setUsername}
-            required
+          style={styles.input}
+          placeholder="Username"
+          value={username}
+          onChangeText={setUsername}
+        
         />
         <TextInput
           style={styles.input}
@@ -87,7 +92,6 @@ const SignUp = ({navigation}) => {
           value={email}
           onChangeText={setEmail}
           keyboardType="email-address"
-          required
         />
         <TextInput
           style={styles.input}
@@ -95,17 +99,18 @@ const SignUp = ({navigation}) => {
           value={password}
           onChangeText={setPassword}
           secureTextEntry
-          required
         />
 
         <TouchableOpacity 
-          style={styles.loginButton}
+          style={styles.signupButton}
           onPress={() => {
-            handleSignUp();
-            // navigation.navigate("Login");
+            if (handleTextInput()) {
+              handleSignup();
+              navigation.navigate("Home");
+            }
           }}
         >
-          <Text style={styles.buttonText}>Sign Up</Text>
+          <Text style={styles.buttonText}>Signup</Text>
         </TouchableOpacity>
       </View>
     </LinearGradient>
@@ -148,7 +153,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     paddingLeft: 10,
   },
-  loginButton: {
+  signupButton: {
     backgroundColor: "#FD2E2A",
     paddingVertical: 12,
     borderRadius: 8,
@@ -173,4 +178,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignUp;
+export default Signup;
