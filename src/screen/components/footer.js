@@ -1,44 +1,35 @@
-import React from 'react';
-import { View, Text } from 'react-native';
+import React from "react";
+import { View, Text, StyleSheet } from "react-native";
 
-const Footer = ({}) => {
-  const footerStyle = {
-    backgroundColor: '#fedae1',
-    padding: 10,
-    width : '100%', 
-    flexDirection: 'row',
-    height: '6%',
-    alignItems: 'center',
-    justifyContent : 'center',
-    position: 'absolute',
-    zIndex: 2,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: -3,
-    },
-    shadowOpacity: 1,
-    shadowRadius: 10,
-    elevation: 20,
-  };
-
+const Footer = () => {
   return (
-    <View style={footerStyle}>
-      <Text 
-        style={{  
-        fontSize: 20, 
-        fontWeight: 'bold', 
-        textDecorationLine: 'underline',
-        bottom: 10,
-        color: '#FD2E2A'
-        }}>
-        Footer
+    <View style={styles.footerstyle}>
+      <Text
+        style={styles.footertext}
+      >
+        𝕋𝕙𝕠𝕦𝕘𝕙𝕥ℂ𝕒𝕟𝕧𝕒𝕤
       </Text>
     </View>
   );
 };
+const styles = StyleSheet.create({
+  footerstyle: {
+    backgroundColor: "#fedae1",
+    width: "100%",
+    position: "absolute",
+    bottom: 0,
+    height: "5%",
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  footertext:{
+    fontSize: 30,
+    fontWeight: "bold",
+    textDecorationLine: "underline",
+    bottom: 10,
+    color: "#FD2E2A",
+    top: 0
+  }
+});
 
 export default Footer;

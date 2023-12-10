@@ -8,8 +8,8 @@ import InitialScreen from './src/screen/initialScreen';
 import Home from './src/screen/Home';
 import SignUp from './src/screen/signup';
 import CreatePost from './src/screen/components/createPost';
-
-
+import UserProfile from './src/screen/userprofile';
+import MyProfile from './src/screen/myProfile';
 const Stack = createStackNavigator();
 const Drawer =createDrawerNavigator();
 export default function App() {
@@ -26,6 +26,8 @@ export default function App() {
         <Stack.Screen options={{headerShown: false}} name='Home' component={Home} />
         <Stack.Screen options={{headerShown: false}} name='SignUp' component={SignUp} />
         <Stack.Screen options={{headerShown: false}} name='CreatePost' component={ CreatePost} />
+        <Stack.Screen options={{headerShown: false}} name='UserProfile' component={ UserProfile} />
+            <Stack.Screen options={{headerShown: false}} name='MyProfile' component={ MyProfile} />
       </Stack.Navigator>
     </NavigationContainer>
   );
